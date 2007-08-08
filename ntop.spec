@@ -9,7 +9,7 @@
 Summary:	Network and traffic analyzer
 Name:		%{name}
 Version:	3.2
-Release:	%mkrel 10
+Release:	%mkrel 11
 License:	GPL
 Group:		Monitoring
 URL:		http://www.ntop.org
