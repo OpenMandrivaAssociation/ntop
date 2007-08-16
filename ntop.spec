@@ -8,16 +8,15 @@
 
 Summary:	Network and traffic analyzer
 Name:		%{name}
-Version:	3.2
-Release:	%mkrel 11
+Version:	3.3
+Release:	%mkrel 1
 License:	GPL
 Group:		Monitoring
 URL:		http://www.ntop.org
-Source0:	%{fname}-%{version}.tar.bz2
+Source0:	http://downloads.sourceforge.net/ntop/%{fname}-%{version}.tar.gz
 Source1:	%{name}.init
 Source2:	%{name}.logrotate
-Patch0:		%{name}-%{version}-gcc32.patch
-Patch1:		%{name}-%{version}-dot.patch
+Patch0:		ntop-path_to_dot.diff
 Requires(pre): rpm-helper
 Requires(preun): rpm-helper
 Requires(post): rpm-helper
@@ -34,71 +33,46 @@ BuildRequires:	xpm-devel
 BuildRequires:	zlib-devel
 BuildRequires:	gdome2-devel
 BuildRequires:	gd-devel
-BuildRequires:	net-snmp-devel
+#BuildRequires:	net-snmp-devel
 BuildRequires:	pkgconfig
 BuildRequires:	chrpath
 BuildRequires:  rpm-devel
-%if %{mdkversion} == 1000
 BuildRequires:	autoconf2.5
 BuildRequires:	automake1.7
-%endif
 BuildRoot:	%{_tmppath}/%{fname}-%{version}-root
 
 %define _requires_exceptions devel(.*)
 
 %description
-Ntop is a network and traffic analyzer that provides a wealth of
-information on various networking hosts and protocols. ntop is
-primarily accessed via a built-in web interface. Optionally, data may
-be stored into a database for analysis or extracted from the web
-server in formats suitable for manipulation in perl or php.
+Ntop is a network and traffic analyzer that provides a wealth of information on
+various networking hosts and protocols. ntop is primarily accessed via a
+built-in web interface. Optionally, data may be stored into a database for
+analysis or extracted from the web server in formats suitable for manipulation
+in perl or php.
 
 %prep
+
 %setup -q
-%if %{mdkversion} == 1000
-%patch0 -p1 -b .gcc32
-%endif
-%patch1 -p1 -b .dot
+%patch0 -p0 -b .dot
 
 %build
+%serverbuild
 
 # populate CPPFLAGS with some includes
 export CPPFLAGS="$CPPFLAGS `pkg-config --cflags-only-I gdome2` `pkg-config --cflags-only-I glib-2.0`"
 
-%if %{mdkversion} == 1000
-aclocal-1.7
-autoconf-2.5x
-automake-1.7 ||
+sh ./autogen.sh
 
-CFLAGS="%{optflags}"
-export CFLAGS
-CXXFLAGS="%{optflags}"
-export CXXFLAGS
-./configure	%{_target_platform} \
-		--bindir=%{_sbindir} \
-		--enable-optimize \
-		--enable-tcpwrap \
-		--enable-sslv3 \
-		--enable-snmp \
-		--sysconfdir=%{_sysconfdir} \
-		--mandir=%{_mandir} \
-		--program-prefix= \
-		--localstatedir=%{_localstatedir} \
-		--datadir=%{_datadir} \
-		--with-localedir=%{_datadir}/locale \
-		--prefix=%{_prefix}
-%else
-%configure	--bindir=%{_sbindir} \
-		--enable-optimize \
-		--enable-tcpwrap \
-		--enable-sslv3 \
-		--enable-snmp \
-		--sysconfdir=%{_sysconfdir} \
-		--mandir=%{_mandir} \
-		--with-localedir=%{_datadir}/locale \
-		--localstatedir=%{_localstatedir}
-
-%endif
+%configure2_5x \
+    --bindir=%{_sbindir} \
+    --enable-optimize \
+    --enable-tcpwrap \
+    --enable-sslv3 \
+    --disable-snmp \
+    --sysconfdir=%{_sysconfdir} \
+    --mandir=%{_mandir} \
+    --with-localedir=%{_datadir}/locale \
+    --localstatedir=%{_localstatedir}
 
 %make
 
@@ -191,4 +165,3 @@ rm -rf %{buildroot}
 %{_datadir}/snmp/mibs/NTOP-MIB.txt
 %attr(0711,%{ntop_user},%{ntop_group}) %dir /var/log/ntop
 %attr(0710,%{ntop_user},%{ntop_group}) %dir %{_localstatedir}/ntop
-
