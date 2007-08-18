@@ -84,7 +84,7 @@ rm -rf %{buildroot}
 
 install -d %{buildroot}%{_sysconfdir}/{logrotate.d,sysconfig}
 install -d %{buildroot}%{_initrddir}
-install -d %{buildroot}%{_datadir}/snmp/mibs
+#install -d %{buildroot}%{_datadir}/snmp/mibs
 install -d %{buildroot}/var/log/ntop
 
 %makeinstall_std
@@ -115,7 +115,7 @@ extra_arg=""
 EOF
 
 # install the mib file
-install -m0644 plugins/NTOP-MIB.txt %{buildroot}%{_datadir}/snmp/mibs/NTOP-MIB.txt
+#install -m0644 plugins/NTOP-MIB.txt %{buildroot}%{_datadir}/snmp/mibs/NTOP-MIB.txt
 
 # cleanup
 #rm -rf %{buildroot}%{_prefix}/lib%{name}
@@ -152,7 +152,7 @@ rm -rf %{buildroot}
 %defattr(-,root,root)
 %doc AUTHORS CONTENTS COPYING ChangeLog NEWS PORTING MANIFESTO SUPPORT_NTOP.txt
 %doc THANKS docs/FAQ docs/HACKING docs/KNOWN_BUGS docs/FILES docs/README
-%doc docs/1STRUN.txt plugins/README.SNMP www
+%doc docs/1STRUN.txt
 %config %{_sysconfdir}/logrotate.d/ntop
 %config(noreplace) %{_sysconfdir}/sysconfig/%name
 %config %{_initrddir}/ntop
@@ -165,6 +165,6 @@ rm -rf %{buildroot}
 %{_libdir}/%{name}/*
 %dir %{_sysconfdir}/ntop
 %{_sysconfdir}/ntop/*
-%{_datadir}/snmp/mibs/NTOP-MIB.txt
+#%{_datadir}/snmp/mibs/NTOP-MIB.txt
 %attr(0711,%{ntop_user},%{ntop_group}) %dir /var/log/ntop
 %attr(0710,%{ntop_user},%{ntop_group}) %dir %{_localstatedir}/ntop
