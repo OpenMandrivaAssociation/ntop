@@ -33,6 +33,8 @@ BuildRequires:	xpm-devel
 BuildRequires:	zlib-devel
 BuildRequires:	gdome2-devel
 BuildRequires:	gd-devel
+BuildRequires:	glib2-devel
+BuildRequires:	libtool
 #BuildRequires:	net-snmp-devel
 BuildRequires:	pkgconfig
 BuildRequires:	chrpath
