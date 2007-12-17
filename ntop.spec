@@ -48,7 +48,6 @@ BuildRequires:	rrdtool-devel
 BuildRequires:	tcp_wrappers-devel
 BuildRequires:	xpm-devel
 BuildRequires:	zlib-devel
-BuildRoot:	%{_tmppath}/%{fname}-%{version}-root
 
 %define _requires_exceptions devel(.*)
 
