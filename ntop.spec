@@ -9,39 +9,45 @@
 Summary:	Network and traffic analyzer
 Name:		%{name}
 Version:	3.3
-Release:	%mkrel 1
+Release:	%mkrel 2
 License:	GPL
 Group:		Monitoring
 URL:		http://www.ntop.org
 Source0:	http://downloads.sourceforge.net/ntop/%{fname}-%{version}.tar.gz
 Source1:	%{name}.init
 Source2:	%{name}.logrotate
+Source3:	http://standards.ieee.org/regauth/oui/oui.txt
 Patch0:		ntop-path_to_dot.diff
+Patch1:		ntop-automake_fixes.diff
+Patch2:		ntop-mysql_headers.diff
 Requires(pre): rpm-helper
 Requires(preun): rpm-helper
 Requires(post): rpm-helper
 Requires(postun): rpm-helper
-BuildRequires:	libpcap-devel
-BuildRequires:	ncurses-devel
-BuildRequires:	readline-devel
-BuildRequires:	tcp_wrappers-devel
-BuildRequires:	gdbm-devel
-BuildRequires:	openssl-devel
-BuildRequires:	libjpeg-devel
-BuildRequires:	libpng-devel
-BuildRequires:	xpm-devel
-BuildRequires:	zlib-devel
-BuildRequires:	gdome2-devel
-BuildRequires:	gd-devel
-BuildRequires:	glib2-devel
-BuildRequires:	libtool
-BuildRequires:	rrdtool-devel
-#BuildRequires:	net-snmp-devel
-BuildRequires:	pkgconfig
-BuildRequires:	chrpath
-BuildRequires:  rpm-devel
+Requires:	tcp_wrappers
+Requires:	rrdtool
 BuildRequires:	autoconf2.5
 BuildRequires:	automake1.7
+BuildRequires:	chrpath
+BuildRequires:	gdbm-devel
+BuildRequires:	gd-devel
+BuildRequires:	gdome2-devel
+BuildRequires:	glib2-devel
+BuildRequires:	libjpeg-devel
+BuildRequires:	libpcap-devel
+BuildRequires:	libpng-devel
+BuildRequires:	libtool
+BuildRequires:  mysql-devel
+BuildRequires:	ncurses-devel
+BuildRequires:	net-snmp-devel >= 5.4.1-3
+BuildRequires:	openssl-devel
+BuildRequires:	pkgconfig
+BuildRequires:	readline-devel
+BuildRequires:  rpm-devel
+BuildRequires:	rrdtool-devel
+BuildRequires:	tcp_wrappers-devel
+BuildRequires:	xpm-devel
+BuildRequires:	zlib-devel
 BuildRoot:	%{_tmppath}/%{fname}-%{version}-root
 
 %define _requires_exceptions devel(.*)
@@ -57,25 +63,42 @@ in perl or php.
 
 %setup -q
 %patch0 -p0 -b .dot
+%patch1 -p0 -b .automake_fixes
+%patch2 -p1 -b .mysql_headers
+
+# update oui.txt
+rm -f oui.txt*
+cp %{SOURCE3} oui.txt; gzip -9 oui.txt
 
 %build
+cp -f acinclude.m4.ntop acinclude.m4
+libtoolize --copy --force; aclocal-1.7; autoconf; automake-1.7 --add-missing --copy
+
 %serverbuild
 
 # populate CPPFLAGS with some includes
 export CPPFLAGS="$CPPFLAGS `pkg-config --cflags-only-I gdome2` `pkg-config --cflags-only-I glib-2.0`"
-
-sh ./autogen.sh
+export CORELIBS="$CORELIBS `mysql_config --libs_r` -ldl -lm -lwrap"
 
 %configure2_5x \
     --bindir=%{_sbindir} \
+    --disable-static \
     --enable-optimize \
     --enable-tcpwrap \
     --enable-sslv3 \
-    --disable-snmp \
+    --enable-snmp \
     --sysconfdir=%{_sysconfdir} \
     --mandir=%{_mandir} \
     --with-localedir=%{_datadir}/locale \
     --localstatedir=%{_localstatedir}
+
+cat >> config.h <<EOF
+#define HAVE_LIBDL 1
+#define HAVE_LIBM 1
+#define HAVE_LIBMYSQLCLIENT_R 1
+#define HAVE_LIBWRAP 1
+#define HAVE_MYSQL_H 1
+EOF
 
 %make
 
@@ -84,7 +107,6 @@ rm -rf %{buildroot}
 
 install -d %{buildroot}%{_sysconfdir}/{logrotate.d,sysconfig}
 install -d %{buildroot}%{_initrddir}
-#install -d %{buildroot}%{_datadir}/snmp/mibs
 install -d %{buildroot}/var/log/ntop
 
 %makeinstall_std
@@ -113,9 +135,6 @@ cat > %{buildroot}%{_sysconfdir}/sysconfig/%{name} <<EOF
 extra_arg=""
 
 EOF
-
-# install the mib file
-#install -m0644 plugins/NTOP-MIB.txt %{buildroot}%{_datadir}/snmp/mibs/NTOP-MIB.txt
 
 # cleanup
 #rm -rf %{buildroot}%{_prefix}/lib%{name}
@@ -152,10 +171,10 @@ rm -rf %{buildroot}
 %defattr(-,root,root)
 %doc AUTHORS CONTENTS COPYING ChangeLog NEWS PORTING MANIFESTO SUPPORT_NTOP.txt
 %doc THANKS docs/FAQ docs/HACKING docs/KNOWN_BUGS docs/FILES docs/README
-%doc docs/1STRUN.txt
-%config %{_sysconfdir}/logrotate.d/ntop
+%doc docs/1STRUN.txt docs/database NetFlow
+%{_sysconfdir}/logrotate.d/ntop
 %config(noreplace) %{_sysconfdir}/sysconfig/%name
-%config %{_initrddir}/ntop
+%{_initrddir}/ntop
 %{_sbindir}/*
 %{_mandir}/*/*
 %dir %{_datadir}/%{fname}
@@ -165,6 +184,5 @@ rm -rf %{buildroot}
 %{_libdir}/%{name}/*
 %dir %{_sysconfdir}/ntop
 %{_sysconfdir}/ntop/*
-#%{_datadir}/snmp/mibs/NTOP-MIB.txt
 %attr(0711,%{ntop_user},%{ntop_group}) %dir /var/log/ntop
 %attr(0710,%{ntop_user},%{ntop_group}) %dir %{_localstatedir}/ntop
