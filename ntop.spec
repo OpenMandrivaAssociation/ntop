@@ -9,7 +9,7 @@
 Summary:	Network and traffic analyzer
 Name:		%{name}
 Version:	3.3
-Release:	%mkrel 2
+Release:	%mkrel 3
 License:	GPL
 Group:		Monitoring
 URL:		http://www.ntop.org
@@ -148,6 +148,15 @@ find %{buildroot}%{_datadir}/%{fname}/html -type d -print0|xargs -0 chmod 755
 # nuke rpath
 chrpath -d %{buildroot}%{_libdir}/ntop/plugins/*.so
 
+cat > README.urpmi << EOF
+There are some manual steps you need to do, first start %{_sbindir}/ntop to set
+the admin password, please consilte the docs/1STRUN.txt file for more info. After
+that change directory to %{_sysconfdir}/ntop and execute the makecert.sh script to
+generate the ntop-cert.pem file.
+
+Have fun!
+EOF
+
 %pre
 /usr/sbin/groupadd -g %{ntop_gid} -r %{ntop_group} 2>/dev/null || :
 /usr/sbin/useradd -M -s /bin/false \
@@ -171,7 +180,7 @@ rm -rf %{buildroot}
 %defattr(-,root,root)
 %doc AUTHORS CONTENTS COPYING ChangeLog NEWS PORTING MANIFESTO SUPPORT_NTOP.txt
 %doc THANKS docs/FAQ docs/HACKING docs/KNOWN_BUGS docs/FILES docs/README
-%doc docs/1STRUN.txt docs/database NetFlow
+%doc docs/1STRUN.txt docs/database NetFlow README.urpmi
 %{_sysconfdir}/logrotate.d/ntop
 %config(noreplace) %{_sysconfdir}/sysconfig/%name
 %{_initrddir}/ntop
