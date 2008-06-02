@@ -90,7 +90,7 @@ export CORELIBS="$CORELIBS `mysql_config --libs_r` -ldl -lm -lwrap"
     --sysconfdir=%{_sysconfdir} \
     --mandir=%{_mandir} \
     --with-localedir=%{_datadir}/locale \
-    --localstatedir=%{_localstatedir}
+    --localstatedir=%{_localstatedir}/lib
 
 cat >> config.h <<EOF
 #define HAVE_LIBDL 1
@@ -160,7 +160,7 @@ EOF
 %pre
 /usr/sbin/groupadd -g %{ntop_gid} -r %{ntop_group} 2>/dev/null || :
 /usr/sbin/useradd -M -s /bin/false \
-	-d %{_localstatedir}/%{name} \
+	-d %{_localstatedir}/lib/%{name} \
 	-c "system user for ntop" \
 	-g %{ntop_group} -r -u %{ntop_uid} %{ntop_user} 2>/dev/null || :
 
@@ -194,4 +194,4 @@ rm -rf %{buildroot}
 %dir %{_sysconfdir}/ntop
 %{_sysconfdir}/ntop/*
 %attr(0711,%{ntop_user},%{ntop_group}) %dir /var/log/ntop
-%attr(0710,%{ntop_user},%{ntop_group}) %dir %{_localstatedir}/ntop
+%attr(0710,%{ntop_user},%{ntop_group}) %dir %{_localstatedir}/lib/ntop
