@@ -165,13 +165,17 @@ EOF
 	-g %{ntop_group} -r -u %{ntop_uid} %{ntop_user} 2>/dev/null || :
 
 %post
+%if %mdkversion < 200900
 /sbin/ldconfig
+%endif
 %_post_service ntop
 
 %preun
 %_preun_service ntop
 
+%if %mdkversion < 200900
 %postun -p /sbin/ldconfig
+%endif
 
 %clean
 rm -rf %{buildroot}
