@@ -1,3 +1,5 @@
+%define _disable_ld_no_undefined 1
+
 %define name ntop
 %define fname ntop
 
@@ -8,9 +10,9 @@
 
 Summary:	Network and traffic analyzer
 Name:		%{name}
-Version:	3.3
-Release:	%mkrel 5
-License:	GPL
+Version:	3.3.7
+Release:	%mkrel 1
+License:	GPLv3
 Group:		Monitoring
 URL:		http://www.ntop.org
 Source0:	http://downloads.sourceforge.net/ntop/%{fname}-%{version}.tar.gz
@@ -20,6 +22,7 @@ Source3:	http://standards.ieee.org/regauth/oui/oui.txt
 Patch0:		ntop-path_to_dot.diff
 Patch1:		ntop-automake_fixes.diff
 Patch2:		ntop-mysql_headers.diff
+Patch3:		ntop-no_usr_local_fix.diff
 Requires(pre): rpm-helper
 Requires(preun): rpm-helper
 Requires(post): rpm-helper
@@ -65,14 +68,17 @@ in perl or php.
 %patch0 -p0 -b .dot
 %patch1 -p0 -b .automake_fixes
 %patch2 -p1 -b .mysql_headers
+%patch3 -p0 -b .no_usr_local_fix
 
 # update oui.txt
 rm -f oui.txt*
 cp %{SOURCE3} oui.txt; gzip -9 oui.txt
 
 %build
-cp -f acinclude.m4.ntop acinclude.m4
-libtoolize --copy --force; aclocal-1.7; autoconf; automake-1.7 --add-missing --copy
+#cp -f acinclude.m4.ntop acinclude.m4
+#libtoolize --copy --force; aclocal-1.7; autoconf; automake-1.7 --add-missing --copy
+
+sh ./autogen.sh
 
 %serverbuild
 
@@ -90,7 +96,7 @@ export CORELIBS="$CORELIBS `mysql_config --libs_r` -ldl -lm -lwrap"
     --sysconfdir=%{_sysconfdir} \
     --mandir=%{_mandir} \
     --with-localedir=%{_datadir}/locale \
-    --localstatedir=%{_localstatedir}/lib
+    --localstatedir=/var/lib
 
 cat >> config.h <<EOF
 #define HAVE_LIBDL 1
@@ -100,7 +106,7 @@ cat >> config.h <<EOF
 #define HAVE_MYSQL_H 1
 EOF
 
-%make
+make
 
 %install
 rm -rf %{buildroot}
@@ -160,7 +166,7 @@ EOF
 %pre
 /usr/sbin/groupadd -g %{ntop_gid} -r %{ntop_group} 2>/dev/null || :
 /usr/sbin/useradd -M -s /bin/false \
-	-d %{_localstatedir}/lib/%{name} \
+	-d /var/lib/%{name} \
 	-c "system user for ntop" \
 	-g %{ntop_group} -r -u %{ntop_uid} %{ntop_user} 2>/dev/null || :
 
@@ -198,4 +204,4 @@ rm -rf %{buildroot}
 %dir %{_sysconfdir}/ntop
 %{_sysconfdir}/ntop/*
 %attr(0711,%{ntop_user},%{ntop_group}) %dir /var/log/ntop
-%attr(0710,%{ntop_user},%{ntop_group}) %dir %{_localstatedir}/lib/ntop
+%attr(0711,%{ntop_user},%{ntop_group}) %dir /var/lib/ntop
