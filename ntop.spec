@@ -144,7 +144,7 @@ EOF
 
 # cleanup
 #rm -rf %{buildroot}%{_prefix}/lib%{name}
-rm -rf %{buildroot}%{_libdir}/*.{a,la,so}
+rm -rf %{buildroot}%{_libdir}/*.{a,la}
 rm -rf %{buildroot}%{_libdir}/plugins
 
 # fix permissions
