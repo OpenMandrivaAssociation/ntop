@@ -11,7 +11,7 @@
 Summary:	Network and traffic analyzer
 Name:		%{name}
 Version:	3.3.8
-Release:	%mkrel 1
+Release:	%mkrel 2
 License:	GPLv3
 Group:		Monitoring
 URL:		http://www.ntop.org
@@ -51,7 +51,7 @@ BuildRequires:	rrdtool-devel
 BuildRequires:	tcp_wrappers-devel
 BuildRequires:	xpm-devel
 BuildRequires:	zlib-devel
-BuildRoot:	%{_tmppath}/%{fname}-%{version}-root
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %define _requires_exceptions devel(.*)
 
