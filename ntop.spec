@@ -61,6 +61,7 @@ BuildRequires:	rrdtool-devel
 BuildRequires:	tcp_wrappers-devel
 BuildRequires:	xpm-devel
 BuildRequires:	zlib-devel
+BuildRequires:	wget
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
