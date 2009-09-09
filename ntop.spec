@@ -1,3 +1,5 @@
+%define _requires_exceptions devel(.*)
+%define _provides_exceptions devel(.*)
 %define _disable_ld_no_undefined 1
 
 %define name ntop
@@ -10,8 +12,8 @@
 
 Summary:	Network and traffic analyzer
 Name:		%{name}
-Version:	3.3.8
-Release:	%mkrel 3
+Version:	3.3.10
+Release:	%mkrel 1
 License:	GPLv3
 Group:		Monitoring
 URL:		http://www.ntop.org
@@ -23,24 +25,32 @@ Patch0:		ntop-path_to_dot.diff
 Patch1:		ntop-automake_fixes.diff
 Patch2:		ntop-mysql_headers.diff
 Patch3:		ntop-no_usr_local_fix.diff
+Patch4:		ntop-3.3.10-system_geoip.diff
+Patch5:		ntop-3.3.10-system_lua.diff
 Requires(pre): rpm-helper
 Requires(preun): rpm-helper
 Requires(post): rpm-helper
 Requires(postun): rpm-helper
 Requires:	tcp_wrappers
 Requires:	rrdtool
+Requires:	geoip
 BuildRequires:	autoconf2.5
 BuildRequires:	automake1.7
 BuildRequires:	chrpath
 BuildRequires:	gdbm-devel
 BuildRequires:	gd-devel
 BuildRequires:	gdome2-devel
+BuildRequires:	GeoIP-devel
 BuildRequires:	glib2-devel
+BuildRequires:	libevent-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpcap-devel
+BuildRequires:	libpcre-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libtool
+BuildRequires:	lua-devel >= 5.1.4
 BuildRequires:  mysql-devel
+BuildRequires:  perl-devel
 BuildRequires:	ncurses-devel
 BuildRequires:	net-snmp-devel >= 5.4.1-3
 BuildRequires:	openssl-devel
@@ -52,8 +62,6 @@ BuildRequires:	tcp_wrappers-devel
 BuildRequires:	xpm-devel
 BuildRequires:	zlib-devel
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
-
-%define _requires_exceptions devel(.*)
 
 %description
 Ntop is a network and traffic analyzer that provides a wealth of information on
@@ -69,16 +77,15 @@ in perl or php.
 %patch1 -p0 -b .automake_fixes
 %patch2 -p1 -b .mysql_headers
 %patch3 -p0 -b .no_usr_local_fix
+%patch4 -p1 -b .system_geoip
+%patch5 -p0 -b .system_lua
 
 # update oui.txt
 rm -f oui.txt*
 cp %{SOURCE3} oui.txt; gzip -9 oui.txt
 
 %build
-#cp -f acinclude.m4.ntop acinclude.m4
-#libtoolize --copy --force; aclocal-1.7; autoconf; automake-1.7 --add-missing --copy
-
-sh ./autogen.sh
+sh ./autogen.sh --noconfig
 
 %serverbuild
 
@@ -106,7 +113,10 @@ cat >> config.h <<EOF
 #define HAVE_MYSQL_H 1
 EOF
 
-make
+#rpath problem
+sed -i -e 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' -e 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
+
+%make
 
 %install
 rm -rf %{buildroot}
@@ -152,7 +162,7 @@ find %{buildroot}%{_datadir}/%{fname}/html -type f -print0|xargs -0 chmod 644
 find %{buildroot}%{_datadir}/%{fname}/html -type d -print0|xargs -0 chmod 755
 
 # nuke rpath
-chrpath -d %{buildroot}%{_libdir}/ntop/plugins/*.so
+#chrpath -d %{buildroot}%{_libdir}/ntop/plugins/*.so
 
 cat > README.urpmi << EOF
 There are some manual steps you need to do, first start %{_sbindir}/ntop to set
