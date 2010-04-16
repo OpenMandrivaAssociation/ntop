@@ -13,7 +13,7 @@
 Summary:	Network and traffic analyzer
 Name:		%{name}
 Version:	3.3.10
-Release:	%mkrel 3
+Release:	%mkrel 4
 License:	GPLv3
 Group:		Monitoring
 URL:		http://www.ntop.org
@@ -56,7 +56,6 @@ BuildRequires:	net-snmp-devel >= 5.4.1-3
 BuildRequires:	openssl-devel
 BuildRequires:	pkgconfig
 BuildRequires:	readline-devel
-BuildRequires:  rpm-devel
 BuildRequires:	rrdtool-devel
 BuildRequires:	tcp_wrappers-devel
 BuildRequires:	xpm-devel
