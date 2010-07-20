@@ -2,15 +2,10 @@
 %define _provides_exceptions devel(.*)
 %define _disable_ld_no_undefined 1
 
-%define ntop_gid 120
-%define ntop_uid 120
-%define ntop_group ntop
-%define ntop_user  ntop
-
-Summary:	Network and traffic analyzer
-Name:		%{name}
+Name:		ntop
 Version:	4.0
-Release:	%mkrel 4
+Release:	%mkrel 1
+Summary:	Network and traffic analyzer
 License:	GPLv3
 Group:		Monitoring
 URL:		http://www.ntop.org
@@ -170,11 +165,7 @@ Have fun!
 EOF
 
 %pre
-/usr/sbin/groupadd -g %{ntop_gid} -r %{ntop_group} 2>/dev/null || :
-/usr/sbin/useradd -M -s /bin/false \
-	-d /var/lib/%{name} \
-	-c "system user for ntop" \
-	-g %{ntop_group} -r -u %{ntop_uid} %{ntop_user} 2>/dev/null || :
+%_pre_useradd %{name} %{_localstatedir}/lib/%{name} /bin/false
 
 %post
 %if %mdkversion < 200900
@@ -209,5 +200,5 @@ rm -rf %{buildroot}
 %{_libdir}/%{name}/*
 %dir %{_sysconfdir}/ntop
 %{_sysconfdir}/ntop/*
-%attr(0711,%{ntop_user},%{ntop_group}) %dir /var/log/ntop
-%attr(0711,%{ntop_user},%{ntop_group}) %dir /var/lib/ntop
+%attr(0711,ntop,ntop) %dir /var/log/ntop
+%attr(0711,ntop,ntop) %dir /var/lib/ntop
