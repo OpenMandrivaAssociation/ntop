@@ -2,9 +2,6 @@
 %define _provides_exceptions devel(.*)
 %define _disable_ld_no_undefined 1
 
-%define name ntop
-%define fname ntop
-
 %define ntop_gid 120
 %define ntop_uid 120
 %define ntop_group ntop
@@ -17,7 +14,7 @@ Release:	%mkrel 4
 License:	GPLv3
 Group:		Monitoring
 URL:		http://www.ntop.org
-Source0:	http://downloads.sourceforge.net/ntop/%{fname}-%{version}.tar.gz
+Source0:	http://downloads.sourceforge.net/ntop/%{name}-%{version}.tar.gz
 Source1:	%{name}.init
 Source2:	%{name}.logrotate
 Source3:	http://standards.ieee.org/regauth/oui/oui.txt
@@ -157,8 +154,8 @@ rm -rf %{buildroot}%{_libdir}/*.{a,la}
 rm -rf %{buildroot}%{_libdir}/plugins
 
 # fix permissions
-find %{buildroot}%{_datadir}/%{fname}/html -type f -print0|xargs -0 chmod 644
-find %{buildroot}%{_datadir}/%{fname}/html -type d -print0|xargs -0 chmod 755
+find %{buildroot}%{_datadir}/%{name}/html -type f -print0|xargs -0 chmod 644
+find %{buildroot}%{_datadir}/%{name}/html -type d -print0|xargs -0 chmod 755
 
 # nuke rpath
 #chrpath -d %{buildroot}%{_libdir}/ntop/plugins/*.so
@@ -205,8 +202,8 @@ rm -rf %{buildroot}
 %{_initrddir}/ntop
 %{_sbindir}/*
 %{_mandir}/*/*
-%dir %{_datadir}/%{fname}
-%{_datadir}/%{fname}/*
+%dir %{_datadir}/%{name}
+%{_datadir}/%{name}/*
 %{_libdir}/lib*
 %dir %{_libdir}/%{name}
 %{_libdir}/%{name}/*
