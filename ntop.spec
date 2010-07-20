@@ -12,7 +12,7 @@
 
 Summary:	Network and traffic analyzer
 Name:		%{name}
-Version:	3.3.10
+Version:	4.0
 Release:	%mkrel 4
 License:	GPLv3
 Group:		Monitoring
@@ -25,8 +25,8 @@ Patch0:		ntop-path_to_dot.diff
 Patch1:		ntop-automake_fixes.diff
 Patch2:		ntop-mysql_headers.diff
 Patch3:		ntop-no_usr_local_fix.diff
-Patch4:		ntop-3.3.10-system_geoip.diff
-Patch5:		ntop-3.3.10-system_lua.diff
+Patch4:		ntop-4.0-system_geoip.patch
+Patch5:		ntop-4.0-system_lua.patch
 Requires(pre): rpm-helper
 Requires(preun): rpm-helper
 Requires(post): rpm-helper
@@ -74,11 +74,11 @@ in perl or php.
 
 %setup -q
 %patch0 -p0 -b .dot
-%patch1 -p0 -b .automake_fixes
+#patch1 -p0 -b .automake_fixes
 %patch2 -p1 -b .mysql_headers
 %patch3 -p0 -b .no_usr_local_fix
 %patch4 -p1 -b .system_geoip
-%patch5 -p0 -b .system_lua
+%patch5 -p1 -b .system_lua
 
 # update oui.txt
 rm -f oui.txt*
