@@ -22,7 +22,6 @@ Source1:	%{name}.init
 Source2:	%{name}.logrotate
 Source3:	http://standards.ieee.org/regauth/oui/oui.txt
 Patch0:		ntop-path_to_dot.diff
-Patch1:		ntop-automake_fixes.diff
 Patch2:		ntop-mysql_headers.diff
 Patch3:		ntop-no_usr_local_fix.diff
 Patch4:		ntop-4.0-system_geoip.patch
@@ -34,8 +33,6 @@ Requires(postun): rpm-helper
 Requires:	tcp_wrappers
 Requires:	rrdtool
 Requires:	geoip
-BuildRequires:	autoconf2.5
-BuildRequires:	automake1.7
 BuildRequires:	chrpath
 BuildRequires:	gdbm-devel
 BuildRequires:	gd-devel
@@ -74,7 +71,6 @@ in perl or php.
 
 %setup -q
 %patch0 -p0 -b .dot
-#patch1 -p0 -b .automake_fixes
 %patch2 -p1 -b .mysql_headers
 %patch3 -p0 -b .no_usr_local_fix
 %patch4 -p1 -b .system_geoip
@@ -114,7 +110,10 @@ cat >> config.h <<EOF
 EOF
 
 #rpath problem
-sed -i -e 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' -e 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
+sed -i \
+    -e 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' \
+    -e 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' \
+    libtool
 
 %make
 
