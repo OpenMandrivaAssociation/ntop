@@ -4,7 +4,7 @@
 
 Name:		ntop
 Version:	4.0
-Release:	%mkrel 1
+Release:	%mkrel 2
 Summary:	Network and traffic analyzer
 License:	GPLv3
 Group:		Monitoring
