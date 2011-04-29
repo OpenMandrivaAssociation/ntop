@@ -3,8 +3,8 @@
 %define _disable_ld_no_undefined 1
 
 Name:		ntop
-Version:	4.0
-Release:	%mkrel 6
+Version:	4.0.3
+Release:	%mkrel 1
 Summary:	Network and traffic analyzer
 License:	GPLv3
 Group:		Monitoring
