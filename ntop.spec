@@ -3,8 +3,8 @@
 %define _disable_ld_no_undefined 1
 
 Name:		ntop
-Version:	4.0.3
-Release:	%mkrel 2
+Version:	4.1.0
+Release:	%mkrel 1
 Summary:	Network and traffic analyzer
 License:	GPLv3
 Group:		Monitoring
@@ -14,10 +14,9 @@ Source1:	%{name}.init
 Source2:	%{name}.logrotate
 Source3:	http://standards.ieee.org/regauth/oui/oui.txt
 Patch0:		ntop-path_to_dot.diff
-Patch2:		ntop-mysql_headers.diff
-Patch3:		ntop-no_usr_local_fix.diff
-Patch4:		ntop-4.0-system_geoip.patch
-Patch5:		ntop-4.0-system_lua.patch
+Patch1:		ntop-no_usr_local_fix.diff
+Patch2:		ntop-4.0-system_geoip.patch
+Patch3:		ntop-4.0-system_lua.patch
 Requires(pre): rpm-helper
 Requires(preun): rpm-helper
 Requires(post): rpm-helper
@@ -63,10 +62,9 @@ in perl or php.
 
 %setup -q
 %patch0 -p0 -b .dot
-%patch2 -p1 -b .mysql_headers
-%patch3 -p0 -b .no_usr_local_fix
-%patch4 -p1 -b .system_geoip
-%patch5 -p1 -b .system_lua
+%patch1 -p0 -b .no_usr_local_fix
+%patch2 -p1 -b .system_geoip
+%patch3 -p1 -b .system_lua
 
 # update oui.txt
 rm -f oui.txt*
