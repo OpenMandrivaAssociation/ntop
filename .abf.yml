@@ -1,0 +1,5 @@
+sources:
+  "ntop-4.1.0.tar.gz:"	11cd397e5524fa72652d840ce1b92631f8bf39a2
+  "ntop.init:"	6e84535b39d3d7af0daa1bc20b3fe2ac433800f5
+  "ntop.logrotate:"	0ff7f3bdf7d69d99eeb9ad0593560abe3da3eae6
+  "oui.txt:"	5b15cabefc8c2f2b08af748f1ef0b0d3f0d33d41

@@ -1,0 +1,71 @@
+diff -Naur -x '*.rej' -x '*.orig' -x '*~' ntop-4.0/configure.in ntop-4.0-system_geoip//configure.in
+--- ntop-4.0/configure.in	2010-07-19 18:50:08.000000000 +0200
++++ ntop-4.0-system_geoip//configure.in	2010-07-20 10:45:17.000000000 +0200
+@@ -1810,31 +1810,6 @@
+ if test ".${ac_cv_lib_GeoIP_GeoIP_record_by_ipnum}" = ".yes"; then
+ LIBS="$LIBS -lGeoIP"
+ 
+-if test -f "GeoLiteCity.dat"; then
+-   echo "GeoLiteCity.dat already present"
+-else
+-   if test -f "3rd_party/GeoLiteCity.dat.gz"; then
+-     cp 3rd_party/GeoLiteCity.dat.gz .
+-   else
+-     wget http://www.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz
+-   fi
+-
+-   gunzip GeoLiteCity.dat.gz
+-fi
+-
+-dnl> --------
+-
+-if test -f "GeoIPASNum.dat"; then
+-   echo "GeoIPASNum.dat already present"
+-else
+-   if test -f "3rd_party/GeoIPASNum.dat.gz"; then
+-     cp 3rd_party/GeoIPASNum.dat.gz .
+-   else
+-     wget http://www.maxmind.com/download/geoip/database/asnum/GeoIPASNum.dat.gz
+-   fi
+-
+-   gunzip GeoIPASNum.dat.gz
+-fi
+ else
+ AC_MSG_RESULT(Please install GeoIP (http://www.maxmind.com/))
+ exit 1
+@@ -2002,7 +1977,6 @@
+ AC_SUBST(SO_VERSION_PATCH)
+ AC_SUBST(RRD_LIB)
+ AC_SUBST(RRD_INC)
+-AC_SUBST(GEO_DIR)
+ AC_SUBST(GETOPT_H)
+ AC_SUBST(GETOPT_C)
+ 
+diff -Naur -x '*.rej' -x '*.orig' -x '*~' ntop-4.0/globals-defines.h ntop-4.0-system_geoip//globals-defines.h
+--- ntop-4.0/globals-defines.h	2010-07-19 18:28:01.000000000 +0200
++++ ntop-4.0-system_geoip//globals-defines.h	2010-07-20 10:41:09.000000000 +0200
+@@ -2689,8 +2689,8 @@
+ #define IP_TCP_PORT_SKYPE          54045
+ 
+ /* GeoIP - http://www.maxmind.com */
+-#define GEO_IP_FILE                "GeoLiteCity.dat"
+-#define GEO_IP_ASN_FILE            "GeoIPASNum.dat"
++#define GEO_IP_FILE                "/usr/share/GeoIP/GeoLiteCity.dat"
++#define GEO_IP_ASN_FILE            "/usr/share/GeoIP/GeoIPASNum.dat"
+ 
+ #define NULL_VALUE                 "(null)"
+ 
+diff -Naur -x '*.rej' -x '*.orig' -x '*~' ntop-4.0/Makefile.am ntop-4.0-system_geoip//Makefile.am
+--- ntop-4.0/Makefile.am	2010-04-25 14:52:28.000000000 +0200
++++ ntop-4.0-system_geoip//Makefile.am	2010-07-20 10:41:09.000000000 +0200
+@@ -74,9 +74,7 @@
+ NTOPDATA = ntop-cert.pem \
+            $(ETTER_PASSIVE) \
+            oui.txt.gz \
+-           specialMAC.txt.gz \
+-	   GeoIPASNum.dat \
+-	   GeoLiteCity.dat
++           specialMAC.txt.gz
+ 
+ NTOPHTML = html html/*.js html/*.html  html/*.gif html/*.jpg html/*.ico html/*.png \
+            html/*.css html/*.dtd \

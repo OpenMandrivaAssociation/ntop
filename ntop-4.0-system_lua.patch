@@ -1,0 +1,27 @@
+diff -Naur -x '*~' -x '*.rej' -x '*.orig' ntop-4.0/misc/configure.in.lua ntop-4.0-system_lua/misc/configure.in.lua
+--- ntop-4.0/misc/configure.in.lua	2009-08-11 10:24:46.000000000 +0200
++++ ntop-4.0-system_lua/misc/configure.in.lua	2010-07-20 10:48:50.000000000 +0200
+@@ -1,21 +1,7 @@
+ dnl>
+ dnl> Lua - http://www.lua.org
+ dnl>
+-LUA_VERSION=lua-5.1.4
+-if test -f "$LUA_VERSION.tar.gz"; then
+-   echo "Lua already present on this machine"
+-else
+-   wget http://www.lua.org/ftp/$LUA_VERSION.tar.gz
+-fi
+-
+-tar xvfz $LUA_VERSION.tar.gz
+-cat $LUA_VERSION/src/Makefile | sed -e s,'MYCFLAGS=-DLUA_USE_POSIX',' MYCFLAGS="-fPIC -DLUA_USE_POSIX"',g > /tmp/lua.temp
+-cat /tmp/lua.temp >  $LUA_VERSION/src/Makefile
+-#rm -f /tmp/lua.temp
+-cd $LUA_VERSION; make posix; cd ..
+-
+-LUA_LIB_DIR=$PWD/$LUA_VERSION"/src"
+-LIBS="-L${LUA_LIB_DIR} -llua ${LIBS} "
+-INCS="${INCS} -I${LUA_LIB_DIR}"
++# use system lua
++LIBS="${LIBS} -llua"
+ AC_DEFINE_UNQUOTED(HAVE_LUA, 1, [LUA is supported])
+ 

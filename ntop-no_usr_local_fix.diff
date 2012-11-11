@@ -1,0 +1,14 @@
+--- configure.in	2009-09-09 12:32:07.000000000 +0200
++++ configure.in.oden	2009-09-09 12:33:13.000000000 +0200
+@@ -507,11 +507,6 @@
+     LOCALEDIR="/usr/lib/locale"
+ fi
+ 
+-dnl> Add /usr/local/ /opt/local
+-CFLAGS="${CFLAGS} -I/usr/local/include -I/opt/local/include"
+-CPPFLAGS="${CPPFLAGS} -I/usr/local/include -I/opt/local/include"
+-LDFLAGS="${LDFLAGS} -L/usr/local/lib -L/opt/local/lib"
+-
+ PWD=`pwd`
+ 
+ echo
