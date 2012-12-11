@@ -1,0 +1,9 @@
+/var/log/ntop/ntop.access.log {
+    missingok
+    compress
+    rotate 2
+    weekly
+    postrotate
+	/sbin/service ntop restart 2> /dev/null || true
+    endscript
+}

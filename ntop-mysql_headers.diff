@@ -1,0 +1,26 @@
+diff -Naur ntop-3.3/configure.in ntop-3.3.oden/configure.in
+--- ntop-3.3/configure.in	2007-06-09 23:30:00.000000000 +0200
++++ ntop-3.3.oden/configure.in	2007-12-17 13:29:56.000000000 +0100
+@@ -1560,7 +1560,7 @@
+   dnl>
+   dnl> MySQL 4.x or better
+   dnl>
+-    AC_CHECK_HEADERS([mysql.h])
++    AC_CHECK_HEADERS([mysql/mysql.h])
+     if test ".${ac_cv_header_mysql_h}" != ".yes"; then
+       echo "MySQL not found. Database support disabled";
+       LIBS="${OLD_LIBS}"
+diff -Naur ntop-3.3/ntop.h ntop-3.3.oden/ntop.h
+--- ntop-3.3/ntop.h	2007-06-05 20:05:46.000000000 +0200
++++ ntop-3.3.oden/ntop.h	2007-12-17 13:29:37.000000000 +0100
+@@ -374,8 +374,8 @@
+ #define my_socket_defined
+ #define my_socket int
+ #endif
+-#include <mysql.h> /* Headers for MySQL usage */
+-#include <errmsg.h>
++#include <mysql/mysql.h> /* Headers for MySQL usage */
++#include <mysql/errmsg.h>
+ #endif
+ 
+ #ifndef WIN32
