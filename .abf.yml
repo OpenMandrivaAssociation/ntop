@@ -1,2 +1,4 @@
+removed_sources:
+  ntop-4.0.3.tar.gz: e7c31eabf31f61758e97d69398176520c1cb5613
 sources:
-  "ntop-4.0.3.tar.gz": e7c31eabf31f61758e97d69398176520c1cb5613
+  ntop-5.0.1.tar.gz: bbb8de893b1d0bb3c20785445ff62c7dbf398d0b

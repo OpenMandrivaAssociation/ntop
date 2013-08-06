@@ -1,0 +1,15 @@
+Index: prefs.c
+===================================================================
+--- prefs.c
++++ prefs.c	2011-04-11 12:00:08.027876360 -0300
+@@ -877,8 +877,8 @@
+       /* We're root */
+       char *user;
+ 
+-      pw = getpwnam(user = "nobody");
+-      if(pw == NULL) pw = getpwnam(user = "anonymous");
++      pw = getpwnam(user = "ntop");
++      if(pw == NULL) pw = getpwnam(user = "nobody");
+ 
+       if(pw != NULL) {
+ 	myGlobals.userId  = pw->pw_uid;
