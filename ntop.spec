@@ -4,7 +4,7 @@
 
 Name:		ntop
 Version:	5.0.1
-Release:	1
+Release:	2
 Summary:	Network and traffic analyzer
 License:	GPLv2
 Group:		Monitoring
