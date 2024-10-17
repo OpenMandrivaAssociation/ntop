@@ -8,7 +8,7 @@ Release:	2
 Summary:	Network and traffic analyzer
 License:	GPLv2
 Group:		Monitoring
-URL:		http://www.ntop.org
+URL:		https://www.ntop.org
 Source0:	http://downloads.sourceforge.net/ntop/%{name}-%{version}.tar.gz
 Source2:	%{name}.logrotate
 Source3:	http://standards.ieee.org/regauth/oui/oui.txt
