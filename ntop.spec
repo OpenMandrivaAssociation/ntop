@@ -18,6 +18,11 @@ Patch0:		ntop-dot-default-path.patch
 Patch5:		ntop-4.0-system_lua.patch
 Patch6:		ntop-running-user.patch
 Patch7:		ntop-5.0.1-automake-1.13.patch
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	libtool-base
+BuildRequires:	slibtool
+BuildRequires:	make
 BuildRequires:	gdbm-devel
 BuildRequires:	gd-devel
 BuildRequires:	GeoIP-devel
